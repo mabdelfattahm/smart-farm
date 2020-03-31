@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="rest-api" />
+        <module name="db-access-postgres" />
+        <module name="use-case-impl" />
+        <module name="interactor" />
+        <module name="web-app" />
+        <module name="db-access-h2" />
+        <module name="domain" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="controller" target="1.5" />
+      <module name="controller-node" target="1.5" />
+      <module name="controller-provider-api" target="1.5" />
+      <module name="farm" target="1.5" />
+      <module name="reading" target="1.5" />
+      <module name="reading-provider-api" target="1.5" />
+      <module name="sensor" target="1.5" />
+      <module name="sensor-node" target="1.5" />
+      <module name="sensor-provider-api" target="1.5" />
+      <module name="signal" target="1.5" />
+      <module name="signal-provider-api" target="1.5" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
