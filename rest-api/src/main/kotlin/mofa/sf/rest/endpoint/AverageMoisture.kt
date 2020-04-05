@@ -4,8 +4,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.future.future
 import mofa.sf.domain.reading.Timestamp
-import mofa.sf.h2.config.DbConnectionPool
-import mofa.sf.h2.repository.SensorReadingRepo
+import mofa.sf.db.DbConnectionPool
+import mofa.sf.db.h2.repository.SensorReadingRepo
 import mofa.sf.rest.dto.AverageMoistureDto
 import mofa.sf.usecase.reading.SensorReadingStorage
 import java.time.Instant
@@ -17,7 +17,7 @@ interface AverageMoisture {
     class Default(private val pool: DbConnectionPool): AverageMoisture {
         override fun list(): CompletableFuture<Collection<AverageMoistureDto>> {
             return CoroutineScope(Dispatchers.IO).future {
-                SensorReadingStorage(SensorReadingRepo(pool)).averageMoisture().map { AverageMoistureDto(it) }
+                SensorReadingStorage(SensorReadingRepo(pool.get())).averageMoisture().map { AverageMoistureDto(it) }
             }
         }
     }
@@ -33,7 +33,7 @@ interface AverageMoisture {
             val ts = Timestamp.Default(this.from)
             val other = Timestamp.Default(this.to)
             return CoroutineScope(Dispatchers.IO).future {
-                SensorReadingStorage(SensorReadingRepo(pool)).averageMoisture(ts, other).map { AverageMoistureDto(it) }
+                SensorReadingStorage(SensorReadingRepo(pool.get())).averageMoisture(ts, other).map { AverageMoistureDto(it) }
             }
         }
     }

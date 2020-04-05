@@ -6,8 +6,8 @@ import kotlinx.coroutines.future.future
 import mofa.sf.domain.controller.ControllerId
 import mofa.sf.domain.signal.Signal
 import mofa.sf.domain.signal.Timestamp
-import mofa.sf.h2.config.DbConnectionPool
-import mofa.sf.h2.repository.ControlSignalRepo
+import mofa.sf.db.DbConnectionPool
+import mofa.sf.db.h2.repository.ControlSignalRepo
 import mofa.sf.rest.dto.SignalDto
 import mofa.sf.usecase.signal.ControlSignalStorage
 import java.time.Instant
@@ -19,7 +19,7 @@ interface ControlSignals {
     class Default(private val pool: DbConnectionPool): ControlSignals {
         override fun list(): CompletableFuture<Collection<Signal>> {
             return CoroutineScope(Dispatchers.IO).future {
-                ControlSignalStorage(ControlSignalRepo(pool)).list().map { SignalDto(it) }
+                ControlSignalStorage(ControlSignalRepo(pool.get())).list().map { SignalDto(it) }
             }
         }
     }
@@ -35,7 +35,7 @@ interface ControlSignals {
             val ts = Timestamp.Default(this.from)
             val other = Timestamp.Default(this.to)
             return CoroutineScope(Dispatchers.IO).future {
-                ControlSignalStorage(ControlSignalRepo(pool)).list(ts, other).map { SignalDto(it) }
+                ControlSignalStorage(ControlSignalRepo(pool.get())).list(ts, other).map { SignalDto(it) }
             }
         }
     }
@@ -50,7 +50,7 @@ interface ControlSignals {
         override fun list(): CompletableFuture<Collection<Signal>> {
             val controller = ControllerId.Default(this.id)
             return CoroutineScope(Dispatchers.IO).future {
-                ControlSignalStorage(ControlSignalRepo(pool)).forController(controller).map { SignalDto(it) }
+                ControlSignalStorage(ControlSignalRepo(pool.get())).forController(controller).map { SignalDto(it) }
             }
         }
     }

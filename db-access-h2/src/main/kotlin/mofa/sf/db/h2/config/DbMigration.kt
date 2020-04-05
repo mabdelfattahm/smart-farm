@@ -1,4 +1,4 @@
-package mofa.sf.h2.config
+package mofa.sf.db.h2.config
 
 import org.flywaydb.core.Flyway
 

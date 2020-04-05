@@ -3,13 +3,14 @@ package mofa.sf.rest
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.get
 import io.javalin.http.BadRequestResponse
-import mofa.sf.h2.config.DbConnectionPool
-import mofa.sf.h2.config.DbMigration
+import mofa.sf.db.h2.access.H2ConnectionPool
+import mofa.sf.db.h2.config.DbMigration
+import mofa.sf.db.h2.repository.ControlSignalRepo
 import mofa.sf.rest.endpoint.*
 
 fun main() {
     DbMigration().migrate()
-    val db = DbConnectionPool()
+    val db = H2ConnectionPool()
 
     val app = Javalin.create {
         it.showJavalinBanner = false

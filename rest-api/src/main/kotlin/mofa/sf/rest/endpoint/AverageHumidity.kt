@@ -4,14 +4,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.future.future
 import mofa.sf.domain.reading.Timestamp
-import mofa.sf.h2.config.DbConnectionPool
-import mofa.sf.h2.repository.SensorReadingRepo
+import mofa.sf.db.DbConnectionPool
+import mofa.sf.db.h2.repository.SensorReadingRepo
 import mofa.sf.rest.dto.AverageHumidityDto
 import mofa.sf.usecase.reading.SensorReadingStorage
 import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZonedDateTime
-import java.time.temporal.TemporalAccessor
 import java.util.concurrent.CompletableFuture
 
 interface AverageHumidity {
@@ -20,7 +17,8 @@ interface AverageHumidity {
     class Default(private val pool: DbConnectionPool): AverageHumidity {
         override fun list(): CompletableFuture<Collection<AverageHumidityDto>> {
             return CoroutineScope(Dispatchers.IO).future {
-                SensorReadingStorage(SensorReadingRepo(pool)).averageHumidity().map { AverageHumidityDto(it) }
+                SensorReadingStorage(SensorReadingRepo(pool.get()))
+                    .averageHumidity().map { AverageHumidityDto(it) }
             }
         }
     }
@@ -36,7 +34,8 @@ interface AverageHumidity {
             val ts = Timestamp.Default(this.from)
             val other = Timestamp.Default(this.to)
             return CoroutineScope(Dispatchers.IO).future {
-                SensorReadingStorage(SensorReadingRepo(pool)).averageHumidity(ts, other).map { AverageHumidityDto(it) }
+                SensorReadingStorage(SensorReadingRepo(pool.get()))
+                    .averageHumidity(ts, other).map { AverageHumidityDto(it) }
             }
         }
     }

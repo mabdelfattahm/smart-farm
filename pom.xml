@@ -12,10 +12,10 @@
         <module>domain</module>
         <module>interactor</module>
         <module>use-case-impl</module>
+        <module>db-access-api</module>
         <module>db-access-h2</module>
         <module>db-access-postgres</module>
         <module>rest-api</module>
         <module>web-app</module>
-        <module>db-access-api</module>
     </modules>
 </project>

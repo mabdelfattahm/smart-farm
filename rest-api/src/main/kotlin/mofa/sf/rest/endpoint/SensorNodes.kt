@@ -3,9 +3,9 @@ package mofa.sf.rest.endpoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.future.future
-import mofa.sf.h2.config.DbConnectionPool
+import mofa.sf.db.DbConnectionPool
 import mofa.sf.domain.sensor.Sensor
-import mofa.sf.h2.repository.SensorRepo
+import mofa.sf.db.h2.repository.SensorRepo
 import mofa.sf.rest.dto.SensorDto
 import mofa.sf.usecase.sensor.SensorStorage
 import java.util.concurrent.CompletableFuture
@@ -16,7 +16,7 @@ interface SensorNodes {
     class Default(private val pool: DbConnectionPool) : SensorNodes {
         override fun list(): CompletableFuture<Collection<Sensor>> {
             return CoroutineScope(Dispatchers.IO).future {
-                SensorStorage(SensorRepo(pool)).list().map { SensorDto(it) }
+                SensorStorage(SensorRepo(pool.get())).list().map { SensorDto(it) }
             }
         }
     }
@@ -33,7 +33,7 @@ interface SensorNodes {
 
         override fun list(): CompletableFuture<Collection<Sensor>> {
             return CoroutineScope(Dispatchers.IO).future {
-                SensorStorage(SensorRepo(pool)).list(page, size).map { SensorDto(it) }
+                SensorStorage(SensorRepo(pool.get())).list(page, size).map { SensorDto(it) }
             }
         }
     }

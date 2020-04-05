@@ -1,5 +1,6 @@
 package mofa.sf.db
 
 interface DbResult {
-    suspend fun rows(): List<DbRow>
+    suspend fun records(): List<DbRecord>
+    suspend fun recordsAffected(): Int
 }

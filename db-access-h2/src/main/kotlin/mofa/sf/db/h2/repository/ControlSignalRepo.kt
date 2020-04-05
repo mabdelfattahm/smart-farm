@@ -1,22 +1,18 @@
-package mofa.sf.h2.repository
+package mofa.sf.db.h2.repository
 
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.reactive.asFlow
 import mofa.sf.data.SignalDataSource
+import mofa.sf.db.DbConnection
+import mofa.sf.db.h2.entity.SignalEntity
 import mofa.sf.domain.controller.ControllerId
 import mofa.sf.domain.reading.Temperature
 import mofa.sf.domain.signal.Control
 import mofa.sf.domain.signal.Signal
 import mofa.sf.domain.signal.Timestamp
-import mofa.sf.h2.config.DbConnectionPool
-import mofa.sf.h2.config.DbStatement
-import mofa.sf.h2.entity.SignalEntity
-import java.time.LocalDateTime
 import java.time.ZoneOffset
 
-class ControlSignalRepo(private val pool: DbConnectionPool): SignalDataSource {
+class ControlSignalRepo(private val connection: DbConnection): SignalDataSource {
     override suspend fun add(signal: Signal) {
-        DbStatement(this.pool)
+        this.connection
             .execute(
                 "INSERT INTO smart_farm.signals(time_stamp, sig_value, control_node) VALUES (?, ?, ?)",
                 signal.timestamp(),
@@ -26,36 +22,33 @@ class ControlSignalRepo(private val pool: DbConnectionPool): SignalDataSource {
     }
 
     override suspend fun all(): Collection<Signal> {
-        return DbStatement(this.pool)
+        return this.connection
             .execute("SELECT * FROM smart_farm.signals ORDER BY time_stamp")
-            .map { row, metadata -> SignalEntity(row, metadata) }
-            .asFlow()
-            .toList()
+            .records()
+            .map { SignalEntity(it) }
     }
 
     override suspend fun between(from: Timestamp, to: Timestamp): Collection<Signal> {
-        return DbStatement(this.pool)
+        return this.connection
             .execute(
                 "SELECT * FROM smart_farm.signals" +
                     " WHERE time_stamp BETWEEN DATEADD('SECOND', ?, DATE '1970-01-01') AND DATEADD('SECOND', ?, DATE '1970-01-01') ORDER BY time_stamp",
                     from.asLong(),
                     to.asLong()
             )
-            .map { row, metadata -> SignalEntity(row, metadata) }
-            .asFlow()
-            .toList()
+            .records()
+            .map { SignalEntity(it) }
     }
 
     override suspend fun findById(id: ControllerId): Collection<Signal> {
-        return DbStatement(this.pool)
+        return this.connection
             .execute("SELECT * FROM smart_farm.signals WHERE control_node = ? ORDER BY time_stamp", id.asString())
-            .map { row, metadata -> SignalEntity(row, metadata) }
-            .asFlow()
-            .toList()
+            .records()
+            .map { SignalEntity(it) }
     }
 
     override suspend fun findById(id: ControllerId, from: Timestamp, to: Timestamp): Collection<Signal> {
-        return DbStatement(this.pool)
+        return this.connection
             .execute(
             "SELECT * FROM smart_farm.signals" +
                     " WHERE control_node = ?" +
@@ -63,32 +56,30 @@ class ControlSignalRepo(private val pool: DbConnectionPool): SignalDataSource {
                 id.asString(),
                 from.asLong(),
                 to.asLong()
-        )
-        .map { row, metadata ->  SignalEntity(row, metadata) }
-        .asFlow()
-        .toList()
+            )
+            .records()
+            .map { SignalEntity(it) }
     }
 
     override suspend fun signalWithTemperature(): Collection<Triple<Timestamp, Temperature, Control>> {
-        return DbStatement(this.pool)
+        return this.connection
             .execute(
                 "SELECT signals.time_stamp AS time_stamp, signals.sig_value AS sig_value, readings.temperature AS temperature" +
                 " FROM smart_farm.signals, smart_farm.readings" +
                 " WHERE signals.time_stamp = readings.time_stamp"
             )
-            .map { row, metadata ->
+            .records()
+            .map {
                 Triple(
-                    Timestamp.Default(row.get("time_stamp", LocalDateTime::class.java)!!.toInstant(ZoneOffset.UTC).toEpochMilli()),
-                    Temperature.Default(row.get("temperature", metadata.getColumnMetadata("temperature").javaType) as Double),
-                    Control.Default(row.get("sig_value", metadata.getColumnMetadata("sig_value").javaType) as Double)
+                    Timestamp.Default(it.getLocalDate("time_stamp").toInstant(ZoneOffset.UTC).toEpochMilli()),
+                    Temperature.Default(it.getDouble("temperature")),
+                    Control.Default(it.getDouble("sig_value"))
                 )
             }
-            .asFlow()
-            .toList()
     }
 
     override suspend fun signalWithTemperature(from: Timestamp, to: Timestamp): Collection<Triple<Timestamp, Temperature, Control>> {
-        return DbStatement(this.pool)
+        return this.connection
             .execute(
                 "SELECT signals.time_stamp AS time_stamp, signals.sig_value AS sig_value, readings.temperature AS temperature" +
                     " FROM smart_farm.signals, smart_farm.readings" +
@@ -97,19 +88,18 @@ class ControlSignalRepo(private val pool: DbConnectionPool): SignalDataSource {
                 from.asLong(),
                 to.asLong()
             )
-            .map { row, metadata ->
+            .records()
+            .map {
                 Triple(
-                    Timestamp.Default(row.get("time_stamp", LocalDateTime::class.java)!!.toInstant(ZoneOffset.UTC).toEpochMilli()),
-                    Temperature.Default(row.get("temperature", metadata.getColumnMetadata("temperature").javaType) as Double),
-                    Control.Default(row.get("sig_value", metadata.getColumnMetadata("sig_value").javaType) as Double)
+                    Timestamp.Default(it.getLocalDate("time_stamp").toInstant(ZoneOffset.UTC).toEpochMilli()),
+                    Temperature.Default(it.getDouble("temperature")),
+                    Control.Default(it.getDouble("sig_value"))
                 )
             }
-            .asFlow()
-            .toList()
     }
 
     override suspend fun signalWithTemperature(id: ControllerId, from: Timestamp, to: Timestamp): Collection<Triple<Timestamp, Temperature, Control>> {
-        return DbStatement(this.pool)
+        return this.connection
             .execute(
                 "SELECT signals.time_stamp AS time_stamp, signals.sig_value AS sig_value, readings.temperature AS temperature " +
                     " FROM smart_farm.signals, smart_farm.readings" +
@@ -120,14 +110,13 @@ class ControlSignalRepo(private val pool: DbConnectionPool): SignalDataSource {
                     from.asLong(),
                     to.asLong()
             )
-            .map { row, metadata ->
+            .records()
+            .map {
                 Triple(
-                    Timestamp.Default(row.get("time_stamp", LocalDateTime::class.java)!!.toInstant(ZoneOffset.UTC).toEpochMilli()),
-                    Temperature.Default(row.get("temperature", metadata.getColumnMetadata("temperature").javaType) as Double),
-                    Control.Default(row.get("sig_value", metadata.getColumnMetadata("sig_value").javaType) as Double)
+                    Timestamp.Default(it.getLocalDate("time_stamp").toInstant(ZoneOffset.UTC).toEpochMilli()),
+                    Temperature.Default(it.getDouble("temperature")),
+                    Control.Default(it.getDouble("sig_value"))
                 )
             }
-            .asFlow()
-            .toList()
     }
 }

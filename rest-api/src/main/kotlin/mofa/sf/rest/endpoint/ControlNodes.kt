@@ -3,9 +3,9 @@ package mofa.sf.rest.endpoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.future.future
-import mofa.sf.h2.config.DbConnectionPool
+import mofa.sf.db.DbConnectionPool
 import mofa.sf.domain.controller.Controller
-import mofa.sf.h2.repository.ControllerRepo
+import mofa.sf.db.h2.repository.ControllerRepo
 import mofa.sf.rest.dto.ControllerDto
 import mofa.sf.usecase.controller.ControllerStorage
 import java.util.concurrent.CompletableFuture
@@ -16,7 +16,7 @@ interface ControlNodes {
     class Default(private val pool: DbConnectionPool) : ControlNodes {
         override fun list(): CompletableFuture<Collection<Controller>> {
             return CoroutineScope(Dispatchers.IO).future {
-                ControllerStorage(ControllerRepo(pool)).list().map { ControllerDto(it) }
+                ControllerStorage(ControllerRepo(pool.get())).list().map { ControllerDto(it) }
             }
         }
     }
@@ -33,7 +33,7 @@ interface ControlNodes {
 
         override fun list(): CompletableFuture<Collection<Controller>> {
             return CoroutineScope(Dispatchers.IO).future {
-                ControllerStorage(ControllerRepo(pool)).list(page, size).map { ControllerDto(it) }
+                ControllerStorage(ControllerRepo(pool.get())).list(page, size).map { ControllerDto(it) }
             }
         }
     }
