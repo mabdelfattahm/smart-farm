@@ -6,7 +6,6 @@ import mofa.sf.domain.signal.Control
 import mofa.sf.domain.signal.Signal
 import mofa.sf.domain.signal.SignalId
 import mofa.sf.domain.signal.Timestamp
-import org.joda.time.DateTimeZone
 import java.time.ZoneOffset
 
 class SignalEntity(private val data: DbRecord) : Signal {
@@ -23,6 +22,6 @@ class SignalEntity(private val data: DbRecord) : Signal {
     }
 
     override fun controlValue(): Control {
-        return Control.Default(this.data.getDouble("sig_value")!!)
+        return Control.Default(this.data.getDouble("sig_value"))
     }
 }
