@@ -1,0 +1,49 @@
+CREATE SCHEMA IF NOT EXISTS smart_farm;
+
+CREATE TABLE smart_farm.farms(
+	id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	name VARCHAR(128) NOT NULL
+);
+
+CREATE TABLE smart_farm.statuses(
+	id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	name VARCHAR(128) NOT NULL
+);
+
+CREATE TABLE smart_farm.nodes_control(
+	id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	name VARCHAR(128) NOT NULL,
+    location GEOMETRY DEFAULT 'POINT(0 0)',
+	farm INT NOT NULL,
+	status INT DEFAULT 1 NOT NULL,
+	FOREIGN KEY (status) REFERENCES smart_farm.statuses(id),
+	FOREIGN KEY (farm) REFERENCES smart_farm.farms(id) ON UPDATE CASCADE ON DELETE RESTRICT
+);
+
+CREATE TABLE smart_farm.nodes_sensor(
+	id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	name VARCHAR(128) NOT NULL,
+    location GEOMETRY DEFAULT 'POINT(0 0)',
+	farm INT NOT NULL,
+	status INT DEFAULT 1 NOT NULL,
+	FOREIGN KEY (status) REFERENCES smart_farm.statuses(id),
+	FOREIGN KEY (farm) REFERENCES smart_farm.farms(id) ON UPDATE CASCADE ON DELETE RESTRICT
+);
+
+create table smart_farm.readings(
+	id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	time_stamp TIMESTAMP NOT NULL,
+	temperature DOUBLE PRECISION NOT NULL,
+	humidity DOUBLE PRECISION NOT NULL,
+	moisture DOUBLE PRECISION NOT NULL,
+	sensor_node INTEGER NOT NULL,
+	FOREIGN KEY (sensor_node) REFERENCES smart_farm.nodes_sensor(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+create table smart_farm.signals(
+	id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	time_stamp TIMESTAMP NOT NULL,
+	sig_value DOUBLE PRECISION NOT NULL,
+	control_node INTEGER NOT NULL,
+	FOREIGN KEY (control_node) REFERENCES smart_farm.nodes_control(id) ON UPDATE CASCADE ON DELETE CASCADE
+);

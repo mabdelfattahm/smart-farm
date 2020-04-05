@@ -1,13 +1,13 @@
 package mofa.sf.postgres.repository
 
 import kotlinx.coroutines.future.await
-import mofa.sf.postgres.config.DbConnectionProvider
+import mofa.sf.postgres.config.DbConnectionPool
 import mofa.sf.data.SensorDataSource
 import mofa.sf.domain.sensor.Sensor
 import mofa.sf.domain.sensor.SensorId
 import mofa.sf.postgres.entity.SensorEntity
 
-class SensorRepo(private val connection: DbConnectionProvider) : SensorDataSource {
+class SensorRepo(private val connection: DbConnectionPool) : SensorDataSource {
     override suspend fun add(sensor: Sensor) {
         this.connection
             .get()

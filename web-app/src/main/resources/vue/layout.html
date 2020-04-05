@@ -5,11 +5,13 @@
     <script src="webjars/axios/0.19.2/dist/axios.min.js"></script>
     <script src="/webjars/vue/2.6.11/dist/vue.js"></script>
     <script src="/webjars/luxon/1.21.2/build/global/luxon.min.js"></script>
-    <script src="/webjars/apexcharts/3.10.0/dist/apexcharts.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue-apexcharts"></script>
-    <script src="/webjars/buefy/0.8.9/dist/buefy.min.js"></script>
-    <link rel="stylesheet" href="/webjars/buefy/0.8.9/dist/buefy.min.css">
-    <link rel="stylesheet" href="/webjars/font-awesome/5.13.0/css/all.min.css">
+    <script src="/webjars/highcharts/8.0.4/highcharts.js"></script>
+    <script src="/webjars/highcharts-vue/1.3.5/dist/highcharts-vue.js"></script>
+    <link rel="stylesheet" href="/webjars/element-ui/2.13.0/lib/theme-chalk/reset.css">
+    <link rel="stylesheet" href="/webjars/element-ui/2.13.0/lib/theme-chalk/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="/webjars/element-ui/2.13.0/lib/index.js"></script>
+    <script src="/webjars/element-ui/2.13.0/lib/umd/locale/en.js"></script>
     <title>Smart Farm</title>
     @componentRegistration
 </head>
@@ -18,6 +20,50 @@
     @routeComponent
 </main>
 <script>
+    const EventBus = new Vue();
+    Vue.use(HighchartsVue.default);
+    Highcharts.setOptions({
+        chart: {
+            style: {
+                "font-family": "Raleway, \"Helvetica Neue\", Helvetica, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", Arial, sans-serif"
+            },
+            zoomType: 'x'
+        },
+        colors: ['#409EFF'],
+        credits: {
+            enabled: false
+        },
+        time: {
+            useUTC: false
+        },
+        title: {
+            style: {
+                fontWeight: "bold"
+            }
+        },
+        xAxis: {
+            dateTimeLabelFormats: {
+                year: '%Y',
+                month: '%b %Y',
+                day: '%d %b',
+                hour: '%H:%M',
+                minute: '%H:%M:%S'
+            },
+            title: {
+                style: {
+                    fontWeight: 600
+                }
+            }
+        },
+        yAxis: {
+            title: {
+                style: {
+                    fontWeight: 600
+                }
+            }
+        }
+    });
+    ELEMENT.locale(ELEMENT.lang.en);
     new Vue({el: "#main-vue"});
 </script>
 </body>

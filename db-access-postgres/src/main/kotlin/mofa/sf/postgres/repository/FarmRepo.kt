@@ -1,13 +1,13 @@
 package mofa.sf.postgres.repository
 
 import kotlinx.coroutines.future.await
-import mofa.sf.postgres.config.DbConnectionProvider
+import mofa.sf.postgres.config.DbConnectionPool
 import mofa.sf.data.FarmDataSource
 import mofa.sf.domain.farm.Farm
 import mofa.sf.domain.farm.FarmId
 import mofa.sf.postgres.entity.FarmEntity
 
-class FarmRepo(private val connection: DbConnectionProvider) : FarmDataSource {
+class FarmRepo(private val connection: DbConnectionPool) : FarmDataSource {
     override suspend fun list(): Collection<Farm> {
         return this.connection
             .get()

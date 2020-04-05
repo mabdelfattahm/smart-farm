@@ -13,6 +13,7 @@
         <module name="web-app" />
         <module name="db-access-h2" />
         <module name="domain" />
+        <module name="db-access-api" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

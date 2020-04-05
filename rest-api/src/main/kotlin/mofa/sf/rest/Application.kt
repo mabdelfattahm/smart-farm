@@ -3,11 +3,13 @@ package mofa.sf.rest
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.get
 import io.javalin.http.BadRequestResponse
-import mofa.sf.postgres.config.DbConnectionProvider
+import mofa.sf.h2.config.DbConnectionPool
+import mofa.sf.h2.config.DbMigration
 import mofa.sf.rest.endpoint.*
 
 fun main() {
-    val db = DbConnectionProvider()
+    DbMigration().migrate()
+    val db = DbConnectionPool()
 
     val app = Javalin.create {
         it.showJavalinBanner = false

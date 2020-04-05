@@ -16,5 +16,6 @@
         <module>db-access-postgres</module>
         <module>rest-api</module>
         <module>web-app</module>
+        <module>db-access-api</module>
     </modules>
 </project>

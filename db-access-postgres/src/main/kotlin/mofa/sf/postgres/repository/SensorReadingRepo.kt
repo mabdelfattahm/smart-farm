@@ -1,14 +1,15 @@
 package mofa.sf.postgres.repository
 
+import com.github.jasync.sql.db.util.map
 import kotlinx.coroutines.future.await
-import mofa.sf.postgres.config.DbConnectionProvider
+import mofa.sf.postgres.config.DbConnectionPool
 import mofa.sf.data.ReadingDataSource
 import mofa.sf.domain.reading.*
 import mofa.sf.domain.sensor.SensorId
 import mofa.sf.postgres.entity.ReadingEntity
 import org.joda.time.DateTimeZone
 
-class SensorReadingRepo(private val connection: DbConnectionProvider) : ReadingDataSource {
+class SensorReadingRepo(private val connection: DbConnectionPool) : ReadingDataSource {
     override suspend fun add(reading: Reading) {
         this.connection
             .get()

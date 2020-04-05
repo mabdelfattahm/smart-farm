@@ -13,10 +13,15 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.version>1.3.71</kotlin.version>
+        <kotlinx.version>1.3.5</kotlinx.version>
         <kotlin.code.style>official</kotlin.code.style>
+        <h2.version>1.4.200</h2.version>
         <junit.version>4.12</junit.version>
         <r2dbc-h2.version>0.8.3.RELEASE</r2dbc-h2.version>
+        <r2dbc-pool.version>0.8.2.RELEASE</r2dbc-pool.version>
         <jts-core.version>1.16.1</jts-core.version>
+        <flyway.core.version>6.3.2</flyway.core.version>
+        <reactor.kotlin.version>1.0.2.RELEASE</reactor.kotlin.version>
     </properties>
 
     <dependencies>
@@ -25,11 +30,33 @@
             <artifactId>kotlin-stdlib</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlinx</groupId>
+            <artifactId>kotlinx-coroutines-reactive</artifactId>
+            <version>${kotlinx.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway.core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>io.r2dbc</groupId>
             <artifactId>r2dbc-h2</artifactId>
             <version>${r2dbc-h2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.r2dbc</groupId>
+            <artifactId>r2dbc-pool</artifactId>
+            <version>${r2dbc-pool.version}</version>
         </dependency>
         <dependency>
             <groupId>org.locationtech.jts</groupId>

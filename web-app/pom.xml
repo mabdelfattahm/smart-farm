@@ -20,11 +20,11 @@
         <junit.version>4.12</junit.version>
         <vue.version>2.6.11</vue.version>
         <axios.version>0.19.2</axios.version>
-        <buefy.version>0.8.9</buefy.version>
+        <element-ui.version>2.13.0</element-ui.version>
         <luxon.version>1.21.2</luxon.version>
         <slf4.version>1.7.30</slf4.version>
-        <apex-chart.version>3.10.0</apex-chart.version>
-        <font-awesome.version>5.13.0</font-awesome.version>
+        <highcharts.version>8.0.4</highcharts.version>
+        <highcharts.vue.version>1.3.5</highcharts.vue.version>
     </properties>
 
     <dependencies>
@@ -67,19 +67,19 @@
             <version>${vue.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.webjars.npm</groupId>
-            <artifactId>apexcharts</artifactId>
-            <version>${apex-chart.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars.npm</groupId>
-            <artifactId>buefy</artifactId>
-            <version>${buefy.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.webjars</groupId>
-            <artifactId>font-awesome</artifactId>
-            <version>${font-awesome.version}</version>
+            <artifactId>highcharts</artifactId>
+            <version>${highcharts.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>highcharts-vue</artifactId>
+            <version>${highcharts.vue.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>element-ui</artifactId>
+            <version>${element-ui.version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars.npm</groupId>

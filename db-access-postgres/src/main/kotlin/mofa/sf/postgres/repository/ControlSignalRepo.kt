@@ -7,11 +7,11 @@ import mofa.sf.domain.reading.Temperature
 import mofa.sf.domain.signal.Control
 import mofa.sf.domain.signal.Signal
 import mofa.sf.domain.signal.Timestamp
-import mofa.sf.postgres.config.DbConnectionProvider
+import mofa.sf.postgres.config.DbConnectionPool
 import mofa.sf.postgres.entity.SignalEntity
 import org.joda.time.DateTimeZone
 
-class ControlSignalRepo(private val connection: DbConnectionProvider): SignalDataSource {
+class ControlSignalRepo(private val connection: DbConnectionPool): SignalDataSource {
     override suspend fun add(signal: Signal) {
         this.connection
             .get()

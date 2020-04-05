@@ -1,8 +1,7 @@
 <template id="humidity-component">
-    <div>
-        <filter-component></filter-component>
+    <el-card class="box-card" shadow="never">
         <chart-component chart-type="line" chart-height="400" :chart-options="this.options" :chart-series="this.series" ></chart-component>
-    </div>
+    </el-card>
 </template>
 
 <script>
@@ -17,61 +16,61 @@
             return {
                 options: {
                     chart: {
-                        id: 'humidity',
+                        id: 'moisture',
                         type: 'line',
-                        height: 400
+                        height: 600,
                     },
-                    colors: ['#008FFB'],
-                    yaxis: {
-                        labels: {
-                            minWidth: 40
+                    title: {
+                        text: "Average Humidity",
+                    },
+                    yAxis: {
+                        title: {
+                            text: "Average Humidity"
                         }
                     },
-                    xaxis: {
+                    xAxis: {
                         type: 'datetime',
                         min: this.fromTime,
                         max: this.toTime,
-                        dateTimeUTC: false,
-                        labels: {
-                            datetimeFormatter: {
-                                year: 'yyyy',
-                                month: 'MMM yyyy',
-                                day: 'dd MMM',
-                                hour: 'HH:mm',
-                                minute: 'HH:mm:ss'
-                            }
+                        title: {
+                            text: "Time"
                         }
                     },
-                },
-                series: []
+                    series: []
+                }
             }
         },
-        mounted: function () {
-            if(this.fromTime != null && this.toTime != null) {
-                this.loadWithFilter(this, this.fromTime, this.toTime)
-            } else {
-                this.load(this)
-            }
+        created() {
+            EventBus.$on('sensor_time_change', this.load);
+        },
+        beforeDestroy() {
+            EventBus.$off('sensor_time_change', this.load)
+        },
+        mounted() {
+            this.load(this.fromTime, this.toTime);
         },
         methods: {
-            load(component) {
-                axios.get("http://localhost:7000/average-humidity")
+            load(start, end) {
+                let component = this;
+                const params = {};
+                let url = "http://localhost:7000/average-humidity";
+                if (start != null && end != null) {
+                    params['params'] = {
+                        from: Math.round(start / 1000),
+                        to: Math.round(end / 1000)
+                    };
+                    url = url + "/time";
+                }
+                axios.get(url, params)
                     .then(response => {
-                        component.series = [];
-                        component.series.push({
+                        const series = {
+                            id: "Humidity",
+                            name: "Humidity",
                             data: response.data.map(object => [object["timestamp"], object["humidity"]])
-                        });
-                    });
-            },
-            loadWithFilter(component, timeFrom, timeTo) {
-                axios.get(
-                    "http://localhost:7000/average-humidity/time",
-                    { params: { from: Math.round(timeFrom/1000), to: Math.round(timeTo/1000) } }
-                ).then(response => {
-                        component.series = [];
-                        component.series.push({
-                            data: response.data.map(object => [object["timestamp"], object["humidity"]])
-                        });
+                        };
+                        component.options.xAxis.min = start;
+                        component.options.xAxis.max = end;
+                        component.options.series = [series];
                     });
             }
         }

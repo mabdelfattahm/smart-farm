@@ -1,13 +1,13 @@
 package mofa.sf.postgres.repository
 
 import kotlinx.coroutines.future.await
-import mofa.sf.postgres.config.DbConnectionProvider
+import mofa.sf.postgres.config.DbConnectionPool
 import mofa.sf.data.ControllerDataSource
 import mofa.sf.domain.controller.Controller
 import mofa.sf.domain.controller.ControllerId
 import mofa.sf.postgres.entity.ControllerEntity
 
-class ControllerRepo(private val connection: DbConnectionProvider) : ControllerDataSource {
+class ControllerRepo(private val connection: DbConnectionPool) : ControllerDataSource {
     override suspend fun add(controller: Controller) {
         this.connection
             .get()
