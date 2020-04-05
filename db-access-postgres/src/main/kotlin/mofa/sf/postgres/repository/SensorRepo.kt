@@ -1,8 +1,7 @@
 package mofa.sf.postgres.repository
 
-import kotlinx.coroutines.future.await
-import mofa.sf.postgres.config.DbConnectionPool
 import mofa.sf.data.SensorDataSource
+import mofa.sf.db.DbConnectionPool
 import mofa.sf.domain.sensor.Sensor
 import mofa.sf.domain.sensor.SensorId
 import mofa.sf.postgres.entity.SensorEntity
@@ -11,23 +10,20 @@ class SensorRepo(private val connection: DbConnectionPool) : SensorDataSource {
     override suspend fun add(sensor: Sensor) {
         this.connection
             .get()
-            .sendPreparedStatement(
+            .execute(
                 "INSERT INTO smart_farm.nodes_sensor(name, location, farm, status) VALUES(?, ?, ?, ?, ?)",
-                arrayListOf(
-                    sensor.name(),
-                    sensor.location().asString(),
-                    sensor.farmId().asString(),
-                    sensor.status().ordinal
-                )
+                sensor.name(),
+                sensor.location().asString(),
+                sensor.farmId().asString(),
+                sensor.status().ordinal
             )
     }
 
     override suspend fun list(): Collection<Sensor> {
         return this.connection
             .get()
-            .sendQuery("SELECT * FROM smart_farm.nodes_sensor ORDER BY id")
-            .await()
-            .rows
+            .execute("SELECT * FROM smart_farm.nodes_sensor ORDER BY id")
+            .records()
             .map { SensorEntity(it) }
     }
 
@@ -35,18 +31,16 @@ class SensorRepo(private val connection: DbConnectionPool) : SensorDataSource {
         val offset = (page - 1) * size
         return this.connection
             .get()
-            .sendQuery("SELECT * FROM smart_farm.nodes_sensor ORDER BY id OFFSET $offset LIMIT $size")
-            .await()
-            .rows
+            .execute("SELECT * FROM smart_farm.nodes_sensor ORDER BY id OFFSET $offset LIMIT $size")
+            .records()
             .map { SensorEntity(it) }
     }
 
     override suspend fun findById(id: SensorId): Sensor {
         return this.connection
             .get()
-            .sendPreparedStatement("SELECT * FROM smart_farm.nodes_sensor WHERE id = ?", arrayListOf(id.asString()))
-            .await()
-            .rows
+            .execute("SELECT * FROM smart_farm.nodes_sensor WHERE id = ?", id.asString())
+            .records()
             .map { SensorEntity(it) }
             .first()
     }

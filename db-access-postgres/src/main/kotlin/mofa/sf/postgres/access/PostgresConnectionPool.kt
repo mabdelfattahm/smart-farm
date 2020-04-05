@@ -1,14 +1,15 @@
-package mofa.sf.postgres.config
+package mofa.sf.postgres.access
 
 import com.github.jasync.sql.db.ConnectionPoolConfigurationBuilder
 import com.github.jasync.sql.db.interceptor.LoggingInterceptorSupplier
 import com.github.jasync.sql.db.pool.ConnectionPool
 import com.github.jasync.sql.db.postgresql.PostgreSQLConnection
 import com.github.jasync.sql.db.postgresql.PostgreSQLConnectionBuilder
+import mofa.sf.db.DbConnection
+import mofa.sf.db.DbConnectionPool
 import java.util.concurrent.TimeUnit
 
-class DbConnectionPool {
-
+class PostgresConnectionPool: DbConnectionPool {
     private val connection: ConnectionPool<PostgreSQLConnection>
 
     init {
@@ -26,8 +27,7 @@ class DbConnectionPool {
         this.connection = PostgreSQLConnectionBuilder.createConnectionPool(config)
     }
 
-    fun get(): ConnectionPool<PostgreSQLConnection> {
-        return this.connection
+    override suspend fun get(): DbConnection {
+        return PostgresConnection(this.connection)
     }
-
 }
