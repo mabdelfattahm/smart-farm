@@ -18,7 +18,7 @@ class ControllerEntity(private val record: DbRecord): Controller {
     }
 
     override fun location(): GeoLocation {
-        return GeoLocation.WktLocation(this.record.getString("location"))
+        return GeoLocation.WktLocation(this.record.getLocationAsWktString("location"))
     }
 
     override fun farmId(): FarmId {

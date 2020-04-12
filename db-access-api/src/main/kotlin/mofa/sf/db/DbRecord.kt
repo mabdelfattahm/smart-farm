@@ -7,4 +7,5 @@ interface DbRecord {
     fun getDouble(column: String): Double
     fun getString(column: String): String
     fun getLocalDate(column: String): LocalDateTime
+    fun getLocationAsWktString(column: String): String
 }

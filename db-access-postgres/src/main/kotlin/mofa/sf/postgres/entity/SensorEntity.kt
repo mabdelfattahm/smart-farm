@@ -18,7 +18,7 @@ class SensorEntity(private val data: DbRecord) : Sensor {
     }
 
     override fun location(): GeoLocation {
-        return GeoLocation.WktLocation(this.data.getString("location"))
+        return GeoLocation.WktLocation(this.data.getLocationAsWktString("location"))
     }
 
     override fun farmId(): FarmId {

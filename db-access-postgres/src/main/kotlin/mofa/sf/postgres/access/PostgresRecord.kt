@@ -26,4 +26,10 @@ class PostgresRecord(private val row: RowData) : DbRecord {
                 ZoneOffset.UTC
         )
     }
+
+    override fun getLocationAsWktString(column: String): String {
+        return this.row.getString(column)!!
+    }
+
+
 }
