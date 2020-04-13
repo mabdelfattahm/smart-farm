@@ -1,8 +1,7 @@
-package mofa.sf.rest.dto
+package mofa.sf.rest.dto.response
 
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.JsonSerializable
-import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer
 import mofa.sf.domain.controller.Controller
@@ -12,7 +11,7 @@ import mofa.sf.domain.controller.ControllerStatus
 import mofa.sf.domain.farm.FarmId
 import mofa.sf.domain.geofeature.GeoLocation
 
-class ControllerDto(private val controller: Controller): Controller, JsonSerializable {
+class ControllerResponse(private val controller: Controller): Controller, JsonSerializable.Base() {
     override fun id(): ControllerId {
         return this.controller.id()
     }

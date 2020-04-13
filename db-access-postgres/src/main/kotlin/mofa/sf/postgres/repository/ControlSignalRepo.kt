@@ -6,20 +6,25 @@ import mofa.sf.domain.controller.ControllerId
 import mofa.sf.domain.reading.Temperature
 import mofa.sf.domain.signal.Control
 import mofa.sf.domain.signal.Signal
+import mofa.sf.domain.signal.SignalId
 import mofa.sf.domain.signal.Timestamp
 import mofa.sf.postgres.entity.SignalEntity
+import mofa.sf.postgres.entity.SignalIdEntity
 import java.time.ZoneOffset
 
 class ControlSignalRepo(private val connection: DbConnectionPool): SignalDataSource {
-    override suspend fun add(signal: Signal) {
-        this.connection
+    override suspend fun add(signal: Signal): SignalId {
+        return this.connection
             .get()
             .execute(
             "INSERT INTO smart_farm.signals(time_stamp, sig_value, control_node) VALUES (?, ?, ?)",
-                signal.timestamp(),
-                signal.controlValue(),
-                signal.controllerId()
+                signal.timestamp().asInstant(),
+                signal.controlValue().asDouble(),
+                signal.controllerId().asString()
             )
+            .records()
+            .map { SignalIdEntity(it) }
+            .first()
     }
 
     override suspend fun all(): Collection<Signal> {

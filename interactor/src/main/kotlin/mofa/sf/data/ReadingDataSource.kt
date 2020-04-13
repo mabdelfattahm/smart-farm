@@ -4,7 +4,7 @@ import mofa.sf.domain.reading.*
 import mofa.sf.domain.sensor.SensorId
 
 interface ReadingDataSource {
-    suspend fun add(reading: Reading)
+    suspend fun add(reading: Reading): ReadingId
     suspend fun findById(id: SensorId): Collection<Reading>
     suspend fun averageHumidity(): Collection<Pair<Timestamp, Humidity>>
     suspend fun averageHumidity(from: Timestamp, to: Timestamp): Collection<Pair<Timestamp, Humidity>>

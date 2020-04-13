@@ -4,10 +4,11 @@ import mofa.sf.domain.controller.ControllerId
 import mofa.sf.domain.reading.Temperature
 import mofa.sf.domain.signal.Control
 import mofa.sf.domain.signal.Signal
+import mofa.sf.domain.signal.SignalId
 import mofa.sf.domain.signal.Timestamp
 
 interface SignalDataSource {
-    suspend fun add(signal: Signal)
+    suspend fun add(signal: Signal): SignalId
     suspend fun all(): Collection<Signal>
     suspend fun between(from: Timestamp, to: Timestamp): Collection<Signal>
     suspend fun findById(id: ControllerId): Collection<Signal>

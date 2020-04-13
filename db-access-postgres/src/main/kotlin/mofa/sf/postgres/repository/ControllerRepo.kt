@@ -5,18 +5,22 @@ import mofa.sf.db.DbConnectionPool
 import mofa.sf.domain.controller.Controller
 import mofa.sf.domain.controller.ControllerId
 import mofa.sf.postgres.entity.ControllerEntity
+import mofa.sf.postgres.entity.ControllerIdEntity
 
 class ControllerRepo(private val connection: DbConnectionPool) : ControllerDataSource {
-    override suspend fun add(controller: Controller) {
-        this.connection
+    override suspend fun add(controller: Controller): ControllerId {
+        return this.connection
             .get()
             .execute(
-            "INSERT INTO smart_farm.nodes_control(name, location, farm, status) VALUES(?, ?, ?, ?, ?)",
-                controller.name(),
+            "INSERT INTO smart_farm.nodes_control(name, location, farm, status) VALUES(?, ?, ?, ?)",
+                controller.name().asString(),
                 controller.location().asString(),
                 controller.farmId().asString(),
-                controller.status().ordinal
+                controller.status().asString()
             )
+            .records()
+            .map { ControllerIdEntity(it) }
+            .first()
     }
 
     override suspend fun list(): List<Controller> {

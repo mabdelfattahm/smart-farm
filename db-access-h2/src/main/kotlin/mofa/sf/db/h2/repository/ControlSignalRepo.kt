@@ -3,22 +3,27 @@ package mofa.sf.db.h2.repository
 import mofa.sf.data.SignalDataSource
 import mofa.sf.db.DbConnection
 import mofa.sf.db.h2.entity.SignalEntity
+import mofa.sf.db.h2.entity.SignalIdEntity
 import mofa.sf.domain.controller.ControllerId
 import mofa.sf.domain.reading.Temperature
 import mofa.sf.domain.signal.Control
 import mofa.sf.domain.signal.Signal
+import mofa.sf.domain.signal.SignalId
 import mofa.sf.domain.signal.Timestamp
 import java.time.ZoneOffset
 
 class ControlSignalRepo(private val connection: DbConnection): SignalDataSource {
-    override suspend fun add(signal: Signal) {
-        this.connection
+    override suspend fun add(signal: Signal): SignalId {
+        return this.connection
             .execute(
                 "INSERT INTO smart_farm.signals(time_stamp, sig_value, control_node) VALUES (?, ?, ?)",
-                signal.timestamp(),
-                signal.controlValue(),
-                signal.controllerId()
+                signal.timestamp().asInstant(),
+                signal.controlValue().asDouble(),
+                signal.controllerId().asString()
             )
+            .records()
+            .map { SignalIdEntity(it) }
+            .first()
     }
 
     override suspend fun all(): Collection<Signal> {

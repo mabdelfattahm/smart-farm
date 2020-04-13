@@ -5,21 +5,24 @@ import mofa.sf.db.DbConnectionPool
 import mofa.sf.domain.reading.*
 import mofa.sf.domain.sensor.SensorId
 import mofa.sf.postgres.entity.ReadingEntity
+import mofa.sf.postgres.entity.ReadingIdEntity
 import java.time.ZoneOffset
 
 class SensorReadingRepo(private val connection: DbConnectionPool) : ReadingDataSource {
-    override suspend fun add(reading: Reading) {
-        this.connection
+    override suspend fun add(reading: Reading): ReadingId {
+        return this.connection
             .get()
             .execute(
                 "INSERT INTO smart_farm.readings(time_stamp, temperature, humidity, moisture, sensor_node) VALUES (?, ?, ?, ?, ?)", 
-                reading.timestamp(),
-                reading.temperature(),
-                reading.humidity(),
-                reading.moisture(),
-                reading.sensorId()
+                reading.timestamp().asInstant(),
+                reading.temperature().asDouble(),
+                reading.humidity().asDouble(),
+                reading.moisture().asDouble(),
+                reading.sensorId().asString()
             )
             .records()
+            .map { ReadingIdEntity(it) }
+            .first()
     }
 
     override suspend fun findById(id: SensorId): Collection<Reading> {

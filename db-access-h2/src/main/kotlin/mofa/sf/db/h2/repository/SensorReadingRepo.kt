@@ -3,26 +3,31 @@ package mofa.sf.db.h2.repository
 import mofa.sf.data.ReadingDataSource
 import mofa.sf.db.DbConnection
 import mofa.sf.db.h2.entity.ReadingEntity
+import mofa.sf.db.h2.entity.ReadingIdEntity
 import mofa.sf.domain.reading.*
 import mofa.sf.domain.sensor.SensorId
 import java.time.ZoneOffset
 
 class SensorReadingRepo(private val connection: DbConnection) : ReadingDataSource {
-    override suspend fun add(reading: Reading) {
-        this.connection
+    override suspend fun add(reading: Reading): ReadingId {
+        return this.connection
             .execute(
                 "INSERT INTO smart_farm.readings(time_stamp, temperature, humidity, moisture, sensor_node) VALUES (?, ?, ?, ?, ?)",
-                    reading.timestamp(),
-                    reading.temperature(),
-                    reading.humidity(),
-                    reading.moisture(), reading.sensorId()
+                    reading.timestamp().asInstant(),
+                    reading.temperature().asDouble(),
+                    reading.humidity().asDouble(),
+                    reading.moisture().asDouble(),
+                    reading.sensorId().asString()
             )
+            .records()
+            .map { ReadingIdEntity(it) }
+            .first()
     }
 
     override suspend fun findById(id: SensorId): Collection<Reading> {
         return this.connection
             .execute("SELECT * FROM smart_farm.readings where sensor_node = ? ORDER BY time_stamp", id.asString())
-                .records()
+            .records()
             .map {ReadingEntity(it) }
     }
 

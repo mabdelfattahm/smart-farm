@@ -1,4 +1,4 @@
-package mofa.sf.rest.dto
+package mofa.sf.rest.dto.response
 
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.JsonSerializable
@@ -11,7 +11,7 @@ import mofa.sf.domain.sensor.SensorId
 import mofa.sf.domain.sensor.SensorName
 import mofa.sf.domain.sensor.SensorStatus
 
-class SensorDto(private val sensor: Sensor): Sensor, JsonSerializable {
+class SensorResponse(private val sensor: Sensor): Sensor, JsonSerializable.Base() {
     override fun id(): SensorId {
         return this.sensor.id()
     }

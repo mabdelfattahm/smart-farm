@@ -2,12 +2,11 @@ package mofa.sf.usecase.sensor
 
 import mofa.sf.data.SensorDataSource
 import mofa.sf.domain.sensor.Sensor
-import mofa.sf.usecase.sensor.AddSensor
-import mofa.sf.usecase.sensor.RetrieveSensor
+import mofa.sf.domain.sensor.SensorId
 
 class SensorStorage(private val ds: SensorDataSource) : AddSensor, RetrieveSensor {
-    override suspend fun add(sensor: Sensor) {
-        this.ds.add(sensor)
+    override suspend fun add(sensor: Sensor): SensorId {
+        return this.ds.add(sensor)
     }
 
     override suspend fun list(): Collection<Sensor> {

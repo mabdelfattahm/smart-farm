@@ -5,18 +5,19 @@ CREATE TABLE smart_farm.farms(
 	name VARCHAR(128) NOT NULL
 );
 
-CREATE TABLE smart_farm.statuses(
-	id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-	name VARCHAR(128) NOT NULL
-);
+-- CREATE TABLE smart_farm.statuses(
+-- 	id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+-- 	name VARCHAR(128) NOT NULL
+-- );
 
 CREATE TABLE smart_farm.nodes_control(
 	id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
 	name VARCHAR(128) NOT NULL,
     location GEOMETRY DEFAULT 'POINT(0 0)',
 	farm INT NOT NULL,
-	status INT DEFAULT 1 NOT NULL,
-	FOREIGN KEY (status) REFERENCES smart_farm.statuses(id),
+	status VARCHAR(8) DEFAULT 'ON' NOT NULL,
+-- 	status INT DEFAULT 1 NOT NULL,
+-- 	FOREIGN KEY (status) REFERENCES smart_farm.statuses(id),
 	FOREIGN KEY (farm) REFERENCES smart_farm.farms(id) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
@@ -25,8 +26,9 @@ CREATE TABLE smart_farm.nodes_sensor(
 	name VARCHAR(128) NOT NULL,
     location GEOMETRY DEFAULT 'POINT(0 0)',
 	farm INT NOT NULL,
-	status INT DEFAULT 1 NOT NULL,
-	FOREIGN KEY (status) REFERENCES smart_farm.statuses(id),
+ 	status VARCHAR(8) DEFAULT 'ON' NOT NULL,
+-- 	status INT DEFAULT 1 NOT NULL,
+-- 	FOREIGN KEY (status) REFERENCES smart_farm.statuses(id),
 	FOREIGN KEY (farm) REFERENCES smart_farm.farms(id) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 

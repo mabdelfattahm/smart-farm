@@ -2,12 +2,11 @@ package mofa.sf.usecase.controller
 
 import mofa.sf.data.ControllerDataSource
 import mofa.sf.domain.controller.Controller
-import mofa.sf.usecase.controller.AddController
-import mofa.sf.usecase.controller.RetrieveController
+import mofa.sf.domain.controller.ControllerId
 
 class ControllerStorage(private val ds: ControllerDataSource): AddController, RetrieveController {
-    override suspend fun add(controller: Controller) {
-        this.ds.add(controller)
+    override suspend fun add(controller: Controller): ControllerId {
+        return this.ds.add(controller)
     }
 
     override suspend fun list(): Collection<Controller> {

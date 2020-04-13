@@ -1,22 +1,16 @@
-package mofa.sf.rest.dto
+package mofa.sf.rest.dto.response
 
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.JsonSerializable
-import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer
-import mofa.sf.domain.controller.Controller
 import mofa.sf.domain.controller.ControllerId
-import mofa.sf.domain.controller.ControllerName
-import mofa.sf.domain.controller.ControllerStatus
-import mofa.sf.domain.farm.FarmId
-import mofa.sf.domain.geofeature.GeoLocation
 import mofa.sf.domain.signal.Control
 import mofa.sf.domain.signal.Signal
 import mofa.sf.domain.signal.SignalId
 import mofa.sf.domain.signal.Timestamp
 
-class SignalDto(private val signal: Signal): Signal, JsonSerializable {
+class SignalResponse(private val signal: Signal): Signal, JsonSerializable.Base() {
     override fun id(): SignalId {
         return this.signal.id()
     }

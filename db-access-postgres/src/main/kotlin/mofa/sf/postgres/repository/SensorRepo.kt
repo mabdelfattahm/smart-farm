@@ -5,18 +5,22 @@ import mofa.sf.db.DbConnectionPool
 import mofa.sf.domain.sensor.Sensor
 import mofa.sf.domain.sensor.SensorId
 import mofa.sf.postgres.entity.SensorEntity
+import mofa.sf.postgres.entity.SensorIdEntity
 
 class SensorRepo(private val connection: DbConnectionPool) : SensorDataSource {
-    override suspend fun add(sensor: Sensor) {
-        this.connection
+    override suspend fun add(sensor: Sensor): SensorId {
+        return this.connection
             .get()
             .execute(
-                "INSERT INTO smart_farm.nodes_sensor(name, location, farm, status) VALUES(?, ?, ?, ?, ?)",
-                sensor.name(),
+                "INSERT INTO smart_farm.nodes_sensor(name, location, farm, status) VALUES(?, ?, ?, ?)",
+                sensor.name().asString(),
                 sensor.location().asString(),
                 sensor.farmId().asString(),
-                sensor.status().ordinal
+                sensor.status().asString()
             )
+            .records()
+            .map { SensorIdEntity(it) }
+            .first()
     }
 
     override suspend fun list(): Collection<Sensor> {

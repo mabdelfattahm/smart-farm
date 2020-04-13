@@ -3,13 +3,11 @@ package mofa.sf.usecase.reading
 import mofa.sf.data.ReadingDataSource
 import mofa.sf.domain.reading.*
 import mofa.sf.domain.sensor.SensorId
-import mofa.sf.usecase.reading.AddSensorReading
-import mofa.sf.usecase.reading.RetrieveSensorReading
 
 class SensorReadingStorage(private val ds: ReadingDataSource): AddSensorReading,
         RetrieveSensorReading, RetrieveAverageHumidity, RetrieveAverageMoisture, RetrieveAverageTemperature {
-    override suspend fun add(reading: Reading) {
-        this.ds.add(reading)
+    override suspend fun add(reading: Reading): ReadingId {
+        return this.ds.add(reading)
     }
 
     override suspend fun forSensor(id: SensorId): Collection<Reading> {

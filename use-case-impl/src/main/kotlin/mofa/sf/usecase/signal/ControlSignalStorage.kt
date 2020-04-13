@@ -5,13 +5,12 @@ import mofa.sf.domain.controller.ControllerId
 import mofa.sf.domain.reading.Temperature
 import mofa.sf.domain.signal.Control
 import mofa.sf.domain.signal.Signal
+import mofa.sf.domain.signal.SignalId
 import mofa.sf.domain.signal.Timestamp
-import mofa.sf.usecase.signal.AddControlSignal
-import mofa.sf.usecase.signal.RetrieveControlSignal
 
 class ControlSignalStorage(private val ds: SignalDataSource) : AddControlSignal, RetrieveControlSignal, RetrieveControlWithTemperature {
-    override suspend fun add(signal: Signal) {
-        this.ds.add(signal)
+    override suspend fun add(signal: Signal): SignalId {
+        return this.ds.add(signal)
     }
 
     override suspend fun list(): Collection<Signal> {

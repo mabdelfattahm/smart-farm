@@ -2,20 +2,24 @@ package mofa.sf.db.h2.repository
 
 import mofa.sf.data.ControllerDataSource
 import mofa.sf.db.DbConnection
+import mofa.sf.db.h2.entity.ControllerEntity
+import mofa.sf.db.h2.entity.ControllerIdEntity
 import mofa.sf.domain.controller.Controller
 import mofa.sf.domain.controller.ControllerId
-import mofa.sf.db.h2.entity.ControllerEntity
 
 class ControllerRepo(private val connection: DbConnection) : ControllerDataSource {
-    override suspend fun add(controller: Controller) {
-        this.connection
+    override suspend fun add(controller: Controller): ControllerId {
+        return this.connection
             .execute(
-                "INSERT INTO smart_farm.nodes_control(name, location, farm, status) VALUES(?, ?, ?, ?, ?)",
-                controller.name(),
+                "INSERT INTO smart_farm.nodes_control(name, location, farm, status) VALUES(?, ?, ?, ?)",
+                controller.name().asString(),
                 controller.location().asString(),
                 controller.farmId().asString(),
-                controller.status().ordinal
+                controller.status().asString()
             )
+            .records()
+            .map { ControllerIdEntity(it) }
+            .first()
     }
 
     override suspend fun list(): List<Controller> {

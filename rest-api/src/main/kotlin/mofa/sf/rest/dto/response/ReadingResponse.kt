@@ -1,20 +1,13 @@
-package mofa.sf.rest.dto
+package mofa.sf.rest.dto.response
 
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.JsonSerializable
-import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer
-import mofa.sf.domain.controller.Controller
-import mofa.sf.domain.controller.ControllerId
-import mofa.sf.domain.controller.ControllerName
-import mofa.sf.domain.controller.ControllerStatus
-import mofa.sf.domain.farm.FarmId
-import mofa.sf.domain.geofeature.GeoLocation
 import mofa.sf.domain.reading.*
 import mofa.sf.domain.sensor.SensorId
 
-class ReadingDto(private val reading: Reading): Reading, JsonSerializable {
+class ReadingResponse(private val reading: Reading): Reading, JsonSerializable.Base() {
 
     override fun id(): ReadingId {
         return this.reading.id()

@@ -1,33 +1,33 @@
 INSERT INTO smart_farm.farms (name) VALUES ('main_farm');
 
-INSERT INTO smart_farm.statuses (name) VALUES ('On');
-INSERT INTO smart_farm.statuses (name) VALUES ('Off');
+-- INSERT INTO smart_farm.statuses (name) VALUES ('On');
+-- INSERT INTO smart_farm.statuses (name) VALUES ('Off');
 
 INSERT INTO smart_farm.nodes_control (name, location, farm, status)
-    VALUES ('test_control_node_1', 'POINT(30.259669 32.419143)', 1, 1);
+    VALUES ('test_control_node_1', 'POINT(30.259669 32.419143)', 1, 'ON');
 INSERT INTO smart_farm.nodes_control (name, location, farm, status)
-    VALUES ('test_control_node_2', 'POINT(30.259669 32.419143)', 1, 1);
+    VALUES ('test_control_node_2', 'POINT(30.259669 32.419143)', 1, 'ON');
 
 INSERT INTO smart_farm.nodes_sensor (name, location, farm, status)
-    VALUES ('test_sensor_node_01', 'POINT(30.259669 32.419143)', 1, 1);
+    VALUES ('test_sensor_node_01', 'POINT(30.259669 32.419143)', 1, 'ON');
 INSERT INTO smart_farm.nodes_sensor (name, location, farm, status)
-    VALUES ('test_sensor_node_02', 'POINT(30.259669 32.419143)', 1, 1);
+    VALUES ('test_sensor_node_02', 'POINT(30.259669 32.419143)', 1, 'ON');
 INSERT INTO smart_farm.nodes_sensor (name, location, farm, status)
-    VALUES ('test_sensor_node_03', 'POINT(30.259669 32.419143)', 1, 1);
+    VALUES ('test_sensor_node_03', 'POINT(30.259669 32.419143)', 1, 'ON');
 INSERT INTO smart_farm.nodes_sensor (name, location, farm, status)
-    VALUES ('test_sensor_node_04', 'POINT(30.259669 32.419143)', 1, 1);
+    VALUES ('test_sensor_node_04', 'POINT(30.259669 32.419143)', 1, 'ON');
 INSERT INTO smart_farm.nodes_sensor (name, location, farm, status)
-    VALUES ('test_sensor_node_05', 'POINT(30.259669 32.419143)', 1, 1);
+    VALUES ('test_sensor_node_05', 'POINT(30.259669 32.419143)', 1, 'ON');
 INSERT INTO smart_farm.nodes_sensor (name, location, farm, status)
-    VALUES ('test_sensor_node_06', 'POINT(30.259669 32.419143)', 1, 1);
+    VALUES ('test_sensor_node_06', 'POINT(30.259669 32.419143)', 1, 'ON');
 INSERT INTO smart_farm.nodes_sensor (name, location, farm, status)
-    VALUES ('test_sensor_node_07', 'POINT(30.259669 32.419143)', 1, 1);
+    VALUES ('test_sensor_node_07', 'POINT(30.259669 32.419143)', 1, 'ON');
 INSERT INTO smart_farm.nodes_sensor (name, location, farm, status)
-    VALUES ('test_sensor_node_08', 'POINT(30.259669 32.419143)', 1, 1);
+    VALUES ('test_sensor_node_08', 'POINT(30.259669 32.419143)', 1, 'ON');
 INSERT INTO smart_farm.nodes_sensor (name, location, farm, status)
-    VALUES ('test_sensor_node_09', 'POINT(30.259669 32.419143)', 1, 1);
+    VALUES ('test_sensor_node_09', 'POINT(30.259669 32.419143)', 1, 'ON');
 INSERT INTO smart_farm.nodes_sensor (name, location, farm, status)
-    VALUES ('test_sensor_node_10', 'POINT(30.259669 32.419143)', 1, 1);
+    VALUES ('test_sensor_node_10', 'POINT(30.259669 32.419143)', 1, 'ON');
 
 INSERT INTO smart_farm.readings (sensor_node, time_stamp, temperature, humidity, moisture)
     VALUES (1, DATEADD('SECOND', 1586028900, DATE '1970-01-01'), 29, 15, 86);

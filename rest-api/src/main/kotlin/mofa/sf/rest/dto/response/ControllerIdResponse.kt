@@ -1,21 +1,24 @@
-package mofa.sf.rest.dto
+package mofa.sf.rest.dto.response
 
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.JsonSerializable
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer
-import mofa.sf.domain.reading.Temperature
-import mofa.sf.domain.reading.Timestamp
+import mofa.sf.domain.controller.ControllerId
 
-class AverageTemperatureDto(private val pair: Pair<Timestamp, Temperature>): JsonSerializable{
+class ControllerIdResponse(private val id: ControllerId): ControllerId, JsonSerializable.Base() {
+    override fun asString(): String {
+        return this.id.asString()
+    }
+
     override fun serializeWithType(generator: JsonGenerator, provider: SerializerProvider?, type: TypeSerializer?) {
         serialize(generator, provider)
     }
 
     override fun serialize(generator: JsonGenerator, provider: SerializerProvider?) {
         generator.writeStartObject()
-        generator.writeNumberField("timestamp", this.pair.first.asLong())
-        generator.writeNumberField("temperature", this.pair.second.asDouble())
+        generator.writeStringField("id", this.asString())
         generator.writeEndObject()
     }
+
 }
