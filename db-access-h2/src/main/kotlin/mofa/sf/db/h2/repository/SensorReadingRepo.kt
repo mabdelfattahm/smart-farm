@@ -28,7 +28,20 @@ class SensorReadingRepo(private val connection: DbConnection) : ReadingDataSourc
         return this.connection
             .execute("SELECT * FROM smart_farm.readings where sensor_node = ? ORDER BY time_stamp", id.asString())
             .records()
-            .map {ReadingEntity(it) }
+            .map { ReadingEntity(it) }
+    }
+
+    override suspend fun between(from: Timestamp, to: Timestamp): Collection<Reading> {
+        return this.connection
+            .execute(
+                "SELECT * FROM smart_farm.readings" +
+                    " WHERE time_stamp BETWEEN DATEADD('SECOND', ?, DATE '1970-01-01')" +
+                    " AND DATEADD('SECOND', ?, DATE '1970-01-01') ORDER BY time_stamp",
+                from.asLong(),
+                to.asLong()
+            )
+            .records()
+            .map { ReadingEntity(it) }
     }
 
     override suspend fun averageHumidity(): Collection<Pair<Timestamp, Humidity>> {
@@ -47,8 +60,9 @@ class SensorReadingRepo(private val connection: DbConnection) : ReadingDataSourc
         return this.connection
             .execute(
             "SELECT time_stamp, AVG(humidity) AS humidity FROM smart_farm.readings" +
-                    " WHERE time_stamp BETWEEN DATEADD('SECOND', ?, DATE '1970-01-01') AND DATEADD('SECOND', ?, DATE '1970-01-01')" +
-                    " GROUP BY time_stamp ORDER BY time_stamp",
+                " WHERE time_stamp BETWEEN DATEADD('SECOND', ?, DATE '1970-01-01')" +
+                " AND DATEADD('SECOND', ?, DATE '1970-01-01')" +
+                " GROUP BY time_stamp ORDER BY time_stamp",
                 from.asLong(),
                 to.asLong()
             )
@@ -77,7 +91,8 @@ class SensorReadingRepo(private val connection: DbConnection) : ReadingDataSourc
         return this.connection
             .execute(
                 "SELECT time_stamp, AVG(moisture) AS moisture FROM smart_farm.readings" +
-                    " WHERE time_stamp BETWEEN DATEADD('SECOND', ?, DATE '1970-01-01') AND DATEADD('SECOND', ?, DATE '1970-01-01')" +
+                    " WHERE time_stamp BETWEEN DATEADD('SECOND', ?, DATE '1970-01-01')" +
+                    " AND DATEADD('SECOND', ?, DATE '1970-01-01')" +
                     " GROUP BY time_stamp ORDER BY time_stamp",
                 from.asLong(),
                 to.asLong()
@@ -107,7 +122,8 @@ class SensorReadingRepo(private val connection: DbConnection) : ReadingDataSourc
         return this.connection
             .execute(
                 "SELECT time_stamp, AVG(temperature) AS temperature FROM smart_farm.readings" +
-                    " WHERE time_stamp BETWEEN DATEADD('SECOND', ?, DATE '1970-01-01') AND DATEADD('SECOND', ?, DATE '1970-01-01')" +
+                    " WHERE time_stamp BETWEEN DATEADD('SECOND', ?, DATE '1970-01-01')" +
+                    " AND DATEADD('SECOND', ?, DATE '1970-01-01')" +
                     " GROUP BY time_stamp ORDER BY time_stamp",
                     from.asLong(),
                     to.asLong()

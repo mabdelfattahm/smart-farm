@@ -37,7 +37,8 @@ class ControlSignalRepo(private val connection: DbConnection): SignalDataSource 
         return this.connection
             .execute(
                 "SELECT * FROM smart_farm.signals" +
-                    " WHERE time_stamp BETWEEN DATEADD('SECOND', ?, DATE '1970-01-01') AND DATEADD('SECOND', ?, DATE '1970-01-01') ORDER BY time_stamp",
+                    " WHERE time_stamp BETWEEN DATEADD('SECOND', ?, DATE '1970-01-01')" +
+                    " AND DATEADD('SECOND', ?, DATE '1970-01-01') ORDER BY time_stamp",
                     from.asLong(),
                     to.asLong()
             )
@@ -56,8 +57,9 @@ class ControlSignalRepo(private val connection: DbConnection): SignalDataSource 
         return this.connection
             .execute(
             "SELECT * FROM smart_farm.signals" +
-                    " WHERE control_node = ?" +
-                    " AND time_stamp BETWEEN DATEADD('SECOND', ?, DATE '1970-01-01') AND DATEADD('SECOND', ?, DATE '1970-01-01') ORDER BY time_stamp",
+                " WHERE control_node = ?" +
+                " AND time_stamp BETWEEN DATEADD('SECOND', ?, DATE '1970-01-01')" +
+                " AND DATEADD('SECOND', ?, DATE '1970-01-01') ORDER BY time_stamp",
                 id.asString(),
                 from.asLong(),
                 to.asLong()
@@ -89,7 +91,8 @@ class ControlSignalRepo(private val connection: DbConnection): SignalDataSource 
                 "SELECT signals.time_stamp AS time_stamp, signals.sig_value AS sig_value, readings.temperature AS temperature" +
                     " FROM smart_farm.signals, smart_farm.readings" +
                     " WHERE signals.time_stamp = readings.time_stamp" +
-                    " AND signals.time_stamp BETWEEN DATEADD('SECOND', ?, DATE '1970-01-01') AND DATEADD('SECOND', ?, DATE '1970-01-01')",
+                    " AND signals.time_stamp BETWEEN DATEADD('SECOND', ?, DATE '1970-01-01')" +
+                    " AND DATEADD('SECOND', ?, DATE '1970-01-01')",
                 from.asLong(),
                 to.asLong()
             )
@@ -110,7 +113,8 @@ class ControlSignalRepo(private val connection: DbConnection): SignalDataSource 
                     " FROM smart_farm.signals, smart_farm.readings" +
                     " WHERE signals.time_stamp = readings.time_stamp" +
                     " AND signals.control_node = ?" +
-                    " AND signals.time_stamp BETWEEN DATEADD('SECOND', ?, DATE '1970-01-01') AND DATEADD('SECOND', ?, DATE '1970-01-01')",
+                    " AND signals.time_stamp BETWEEN DATEADD('SECOND', ?, DATE '1970-01-01')" +
+                    " AND DATEADD('SECOND', ?, DATE '1970-01-01')",
                     id.asString(),
                     from.asLong(),
                     to.asLong()

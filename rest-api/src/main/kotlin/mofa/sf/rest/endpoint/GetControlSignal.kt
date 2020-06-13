@@ -14,12 +14,12 @@ import java.time.Instant
 import java.util.concurrent.CompletableFuture
 
 interface GetControlSignal {
-    fun list(): CompletableFuture<Collection<Signal>>
+    fun signals(): CompletableFuture<Collection<Signal>>
 
     class Default(private val pool: DbConnectionPool): GetControlSignal {
-        override fun list(): CompletableFuture<Collection<Signal>> {
+        override fun signals(): CompletableFuture<Collection<Signal>> {
             return CoroutineScope(Dispatchers.IO).future {
-                ControlSignalStorage(ControlSignalRepo(pool.get())).list().map { SignalResponse(it) }
+                ControlSignalStorage(ControlSignalRepo(pool.get())).all().map { SignalResponse(it) }
             }
         }
     }
@@ -31,7 +31,7 @@ interface GetControlSignal {
             }
         }
 
-        override fun list(): CompletableFuture<Collection<Signal>> {
+        override fun signals(): CompletableFuture<Collection<Signal>> {
             val ts = Timestamp.Default(this.from)
             val other = Timestamp.Default(this.to)
             return CoroutineScope(Dispatchers.IO).future {
@@ -47,7 +47,7 @@ interface GetControlSignal {
             }
         }
 
-        override fun list(): CompletableFuture<Collection<Signal>> {
+        override fun signals(): CompletableFuture<Collection<Signal>> {
             val controller = ControllerId.Default(this.id)
             return CoroutineScope(Dispatchers.IO).future {
                 ControlSignalStorage(ControlSignalRepo(pool.get())).forController(controller).map { SignalResponse(it) }

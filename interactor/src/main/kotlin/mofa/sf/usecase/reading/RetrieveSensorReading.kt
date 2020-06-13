@@ -6,4 +6,6 @@ import mofa.sf.domain.sensor.SensorId
 
 interface RetrieveSensorReading {
     suspend fun forSensor(id: SensorId): Collection<Reading>
+    suspend fun list(from: Timestamp, to: Timestamp): Collection<Reading>
+
 }

@@ -109,9 +109,22 @@ fun main() {
             context.json(AddSensorReading.Default(db).add(ReadingRequest(json)))
         }
 
-        get("/sensor-readings/:id") { context ->
-            val id = context.pathParam<Int>("id").get()
-            context.json(GetSensorReading.FilteredBySensor(db, id).list())
+        get("/sensor-readings") { context ->
+            val map = context.queryParamMap()
+            if (map.containsKey("id")) {
+                val id = context.queryParam<Int>("id").get()
+                context.json(GetSensorReading.FilteredBySensor(db, id).readings())
+            } else if (map.containsKey("from") && map.containsKey("to")) {
+                val from = context.queryParam<Long>("from").get()
+                val to = context.queryParam<Long>("to").get()
+                try {
+                    context.json(GetSensorReading.FilteredByTime(db, from, to).readings())
+                } catch (ex: IllegalArgumentException) {
+                    throw BadRequestResponse(ex.message?:"")
+                }
+            } else {
+                throw BadRequestResponse("Invalid path parameters.")
+            }
         }
 
         post("/control-signals") { context ->
@@ -119,23 +132,26 @@ fun main() {
             context.json(AddControlSignal.Default(db).add(SignalRequest(json)))
         }
 
+        get("/control-signals/all/") { context ->
+            context.json(GetControlSignal.Default(db).signals())
+        }
+
         get("/control-signals") { context ->
-            context.json(GetControlSignal.Default(db).list())
-        }
-
-        get("/control-signals/time") { context ->
-            val from = context.queryParam<Long>("from").get()
-            val to = context.queryParam<Long>("to").get()
-            try {
-                context.json(GetControlSignal.FilteredByTime(db, from, to).list())
-            } catch (ex: IllegalArgumentException) {
-                throw BadRequestResponse(ex.message?:"")
+            val map = context.queryParamMap()
+            if(map.containsKey("id")) {
+                val id = context.queryParam<Int>("id").get()
+                context.json(GetControlSignal.FilteredBySensor(db, id).signals())
+            } else if (map.containsKey("from") && map.containsKey("to")) {
+                val from = context.queryParam<Long>("from").get()
+                val to = context.queryParam<Long>("to").get()
+                try {
+                    context.json(GetControlSignal.FilteredByTime(db, from, to).signals())
+                } catch (ex: IllegalArgumentException) {
+                    throw BadRequestResponse(ex.message?:"")
+                }
+            } else {
+                throw BadRequestResponse("Invalid path parameters.")
             }
-        }
-
-        get("/control-signals/:id") { context ->
-            val id = context.pathParam<Int>("id").get()
-            context.json(GetControlSignal.FilteredBySensor(db, id).list())
         }
     }
 }

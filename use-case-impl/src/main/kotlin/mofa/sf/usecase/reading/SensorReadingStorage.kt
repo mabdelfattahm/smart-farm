@@ -10,6 +10,10 @@ class SensorReadingStorage(private val ds: ReadingDataSource): AddSensorReading,
         return this.ds.add(reading)
     }
 
+    override suspend fun list(from: Timestamp, to: Timestamp): Collection<Reading> {
+        return this.ds.between(from, to)
+    }
+
     override suspend fun forSensor(id: SensorId): Collection<Reading> {
         return this.ds.findById(id)
     }

@@ -13,7 +13,7 @@ class ControlSignalStorage(private val ds: SignalDataSource) : AddControlSignal,
         return this.ds.add(signal)
     }
 
-    override suspend fun list(): Collection<Signal> {
+    override suspend fun all(): Collection<Signal> {
         return this.ds.all()
     }
 
