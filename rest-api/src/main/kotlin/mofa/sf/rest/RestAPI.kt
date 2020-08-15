@@ -7,10 +7,7 @@ import io.javalin.http.BadRequestResponse
 import io.javalin.plugin.json.JavalinJackson
 import mofa.sf.db.h2.access.H2ConnectionPool
 import mofa.sf.db.h2.config.DbMigration
-import mofa.sf.rest.dto.request.ControllerRequest
-import mofa.sf.rest.dto.request.ReadingRequest
-import mofa.sf.rest.dto.request.SensorRequest
-import mofa.sf.rest.dto.request.SignalRequest
+import mofa.sf.rest.dto.request.*
 import mofa.sf.rest.endpoint.*
 
 fun main() {
@@ -153,6 +150,15 @@ fun main() {
             } else {
                 throw BadRequestResponse("Invalid path parameters.")
             }
+        }
+
+        post("/accuracy") { context ->
+            val json = JavalinJackson.getObjectMapper().readTree(context.body())
+            context.json(
+                mapOf(
+                    Pair("id", AddPrediction.Default(db).add(PredictionRequest(json).toDomain()))
+                )
+            )
         }
     }
 }
