@@ -33,6 +33,10 @@ class SensorReadingRepo(private val connection: DbConnectionPool) : ReadingDataS
             .map { ReadingEntity(it) }
     }
 
+    override suspend fun between(from: Timestamp, to: Timestamp): Collection<Reading> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun averageHumidity(): Collection<Pair<Timestamp, Humidity>> {
         return this.connection
             .get()
