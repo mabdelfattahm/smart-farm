@@ -7,12 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="rest-api" />
+        <module name="web-app" />
+        <module name="domain" />
         <module name="db-access-postgres" />
         <module name="use-case-impl" />
         <module name="interactor" />
-        <module name="web-app" />
         <module name="db-access-h2" />
-        <module name="domain" />
         <module name="db-access-api" />
       </profile>
     </annotationProcessing>

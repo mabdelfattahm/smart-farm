@@ -20,6 +20,7 @@ fun main() {
     val app = Javalin.create {
         it.showJavalinBanner = false
         it.enableCorsForAllOrigins()
+        it.addStaticFiles("/")
     }.start(7000)
 
     app.routes {
